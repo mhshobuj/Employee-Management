@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+      <item android:title="Details"
+          android:id="@+id/row_item_details"/>
+    <item android:title="Edit"
+        android:id="@+id/row_item_edit"/>
+    <item android:title="Delete"
+        android:id="@+id/row_item_delete"/>
+</menu>
