@@ -29,12 +29,50 @@
             android:layout_height="wrap_content"
             android:id="@+id/emp_details_designation"
             android:textSize="18sp"/>
-
-        <TextView
+        <RelativeLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/emp_details_phone"
-            android:textSize="18sp"/>
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/emp_details_phone"
+                android:textSize="18sp"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/emp_details_phone"
+                android:paddingLeft="10dp"
+                android:src="@drawable/ic_call_black_24dp"
+                android:id="@+id/callImage"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/callImage"
+                android:paddingLeft="10dp"
+                android:src="@drawable/ic_textsms_black_24dp"
+                android:id="@+id/smsImage"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/emp_details_phone"
+                android:id="@+id/emp_details_email"
+                android:textSize="18sp"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/emp_details_phone"
+                android:layout_toRightOf="@id/emp_details_email"
+                android:paddingLeft="10dp"
+                android:src="@drawable/ic_email_black_24dp"
+                android:id="@+id/emailImage"/>
+
+        </RelativeLayout>
+
 
         <TextView
             android:layout_width="wrap_content"
@@ -42,11 +80,6 @@
             android:id="@+id/emp_details_gender"
             android:textSize="18sp"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/emp_details_email"
-            android:textSize="18sp"/>
 
         <TextView
             android:layout_width="wrap_content"

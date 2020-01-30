@@ -1,10 +1,15 @@
 package com.example.employeemanagement;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -13,6 +18,7 @@ import android.widget.Toast;
 
 import com.example.employeemanagement.adapters.BasedSalariedEmployeeAdapter;
 import com.example.employeemanagement.entities.BasedSalariedEmployee;
+import com.example.employeemanagement.prefs.AuthPreference;
 import com.example.employeemanagement.roomdb.EmployeeDB;
 import com.example.employeemanagement.utils.ConstantUtils;
 
@@ -24,6 +30,8 @@ public class EmployeeListActivity extends AppCompatActivity {
     private RecyclerView empRV;
     private BasedSalariedEmployeeAdapter employeeAdapter;
 
+    private AuthPreference authPreference;
+
     private String[] empList = {
             ConstantUtils.EmployeeType.BASED_SALARIED,
             ConstantUtils.EmployeeType.HOURLU_SALARIED,
@@ -33,6 +41,9 @@ public class EmployeeListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_employee_list);
+
+        authPreference = new AuthPreference(this);
+
         setTitle("Employee List");
         empTypeSP = findViewById(R.id.empTypeSP);
         empRV = findViewById(R.id.empRV);
@@ -62,6 +73,35 @@ public class EmployeeListActivity extends AppCompatActivity {
         //linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         empRV.setLayoutManager(linearLayoutManager);
         empRV.setAdapter(employeeAdapter);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.main_manu,menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.adminSettings:
+                Toast.makeText(this, "Coming Soon....", Toast.LENGTH_SHORT).show();
+                break;
+
+            case R.id.adminLogout:
+                authPreference.setLoginStatus(false);
+                finish();
+                Intent intent = new Intent(EmployeeListActivity.this,LoginActivity.class);
+                startActivity(intent);
+                break;
+
+            case R.id.adminProfile:
+                Intent intent1 = new Intent(EmployeeListActivity.this, AdminProfileActivity.class);
+                startActivity(intent1);
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private List<BasedSalariedEmployee> generateEmployeeDummyList() {
