@@ -24,4 +24,7 @@ public interface BasiedSalariedEmployeeDAO {
 
     @Query("select * from TBL_BASED_SALARIED_EMP")
     List<BasedSalariedEmployee> getAllBasedSalariedEmployee();
+
+    @Query("select * from tbl_based_salaried_emp where empID like :empId")
+    BasedSalariedEmployee getBaseSalariedEmployeeID(long empId);
 }

@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -34,6 +35,11 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
     private EditText nameET,dobET,phoneET,emailET,baseSalaryET,
             hourlySalaryET,totalHoursET,commissionRateET,grossRateET;
 
+    private Button regBT, editBT;
+    private BasedSalariedEmployee bse = null;
+
+    private long empID = 0;
+
     private RadioGroup genderRG, empTypeRG;
     private LinearLayout empAllTypeLL;
     private String gender = "Male";
@@ -45,6 +51,7 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        empID = getIntent().getLongExtra("id", -1);
 
         authPreference = new AuthPreference(this);
 
@@ -58,10 +65,29 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
         commissionRateET = findViewById(R.id.empCommissionRateInput);
         grossRateET = findViewById(R.id.empGrossSaleInput);
 
+        regBT = findViewById(R.id.regBT);
+        editBT = findViewById(R.id.editBT);
+
         genderRG = findViewById(R.id.genderRG);
         empTypeRG = findViewById(R.id.empTypeRG);
 
         empAllTypeLL = findViewById(R.id.empTypeLL);
+
+        if (empID > 0){
+            regBT.setVisibility(View.GONE);
+            editBT.setVisibility(View.VISIBLE);
+            dobET.setEnabled(false);
+
+           bse = EmployeeDB.getInstance(this)
+                    .getBasiedSalariedEmployeeDAO()
+                    .getBaseSalariedEmployeeID(empID);
+
+            nameET.setText(bse.getEmp_name());
+            dobET.setText(bse.getEmp_dob());
+            emailET.setText(bse.getEmp_email());
+            phoneET.setText(bse.getEmp_phone());
+            baseSalaryET.setText(String.valueOf(bse.getBase_salary()));
+        }
 
         genderRG.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -210,6 +236,26 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
                 break;
         }
     }
+    public void updateEmployeeDetails(View view) {
+        String name = nameET.getText().toString();
+        String email = emailET.getText().toString();
+        String mobile = phoneET.getText().toString();
+        String baseSalary = baseSalaryET.getText().toString();
+
+        bse.setEmp_name(name);
+        bse.setEmp_email(email);
+        bse.setEmp_phone(mobile);
+        bse.setBase_salary(Double.parseDouble(baseSalary));
+
+        final int updatedRow =
+                EmployeeDB.getInstance(this)
+                .getBasiedSalariedEmployeeDAO()
+                .updateBasiedSalariedEmployee(bse);
+        if (updatedRow > 0){
+            Toast.makeText(this, "Updated Successfully", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(MainActivity.this, EmployeeListActivity.class));
+        }
+    }
 
     public void showDatePicker(View view) {
 
@@ -234,4 +280,6 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
         dobET.setText(dob);
 
     }
+
+
 }

@@ -1,6 +1,8 @@
 package com.example.employeemanagement.adapters;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -9,11 +11,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.employeemanagement.EmployeeDetailsActivity;
+import com.example.employeemanagement.MainActivity;
 import com.example.employeemanagement.R;
 import com.example.employeemanagement.entities.BasedSalariedEmployee;
+import com.example.employeemanagement.roomdb.EmployeeDB;
 
 import java.util.List;
 
@@ -43,7 +49,8 @@ public class BasedSalariedEmployeeAdapter extends RecyclerView.Adapter<BasedSala
         holder.menuTV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                BasedSalariedEmployee bse = empList.get(position);
+                final BasedSalariedEmployee bse = empList.get(position);
+                final long empId = bse.getEmpID();
                 PopupMenu popupMenu = new PopupMenu(context, v);
                 popupMenu.getMenuInflater().inflate(R.menu.employee_row_menu,popupMenu.getMenu());
                 popupMenu.show();
@@ -52,13 +59,38 @@ public class BasedSalariedEmployeeAdapter extends RecyclerView.Adapter<BasedSala
                     public boolean onMenuItemClick(MenuItem item) {
                         switch (item.getItemId()){
                             case R.id.row_item_details:
-                                Toast.makeText(context, "Details", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(context, EmployeeDetailsActivity.class);
+                                intent.putExtra("id", empId);
+                                context.startActivity(intent);
                                 break;
+
                             case R.id.row_item_edit:
-                                Toast.makeText(context, "Edit", Toast.LENGTH_SHORT).show();
+                                Intent intent1 = new Intent(context, MainActivity.class);
+                                intent1.putExtra("id", empId);
+                                context.startActivity(intent1);
                                 break;
+
                             case R.id.row_item_delete:
-                                Toast.makeText(context, "Delete", Toast.LENGTH_SHORT).show();
+                                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                                builder.setIcon(R.drawable.ic_delete_forever_black_24dp);
+                                builder.setTitle("Delete item");
+                                builder.setMessage("Are you sure to delete this item?");
+                                builder.setNegativeButton("Delete", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        final int deletedItem = EmployeeDB.getInstance(context)
+                                                .getBasiedSalariedEmployeeDAO()
+                                                .deleteBasiedSalariedEmployee(bse);
+                                        if (deletedItem > 0){
+                                            empList.remove(bse);
+                                            notifyDataSetChanged();
+                                            Toast.makeText(context, "Deleted", Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                });
+                                builder.setPositiveButton("Cancel",null);
+                                AlertDialog dialog = builder.create();
+                                dialog.show();
                                 break;
                         }
                         return false;

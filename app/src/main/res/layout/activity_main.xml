@@ -194,8 +194,22 @@
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:id="@+id/regBT"
             android:text="Register"
             android:onClick="registerNewEmployee"
+            android:background="#FF0000"
+            android:textColor="#FFFFFF"
+            android:layout_margin="5dp"
+            android:textSize="20sp"
+            android:padding="7dp"/>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/editBT"
+            android:visibility="gone"
+            android:text="Update"
+            android:onClick="updateEmployeeDetails"
             android:background="#FF0000"
             android:textColor="#FFFFFF"
             android:layout_margin="5dp"
